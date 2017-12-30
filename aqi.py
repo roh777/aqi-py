@@ -30,7 +30,10 @@ def get_aqi_by_city(city):
 	aqi_req = requests.get(req_url)
 	if aqi_req.status_code == 200:
 		aqi_res = aqi_req.json()
-		print(aqi_res)
+		station_list = aqi_res.get('data')
+
+		for station in station_list:
+			print(station['station']['name'], station.get('aqi'))
 	else:
 		print('Error {0} Network error').format(aqi_req.status_code)
 	# except Exception:
@@ -42,4 +45,8 @@ def get_aqi():
 	if city is not None:
 		get_aqi_by_city(city['city'])
 
-get_aqi()
+def main():
+	get_aqi()
+
+if __name__ == '__main__':
+	main()
