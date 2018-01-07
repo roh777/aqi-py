@@ -10,7 +10,7 @@ def get_location():
 		status_code = loc_req.status_code
 		if status_code is 200:
 			loc_res = loc_req.json()
-			city = loc_res['region']
+			city = loc_res['cit']y
 			country = loc_res['country']
 			coordinates = loc_res['loc'].split(',')
 			return {'city' : city}
