@@ -1,6 +1,7 @@
 #!bin/python
 import requests
 import sys
+#for command line arguments
 import argparse
 import urllib.parse
 
@@ -53,10 +54,12 @@ def get_aqi():
 		get_aqi_by_city(city['city'])
 
 def main():
-	if len(sys.argv) > 1: 		#if user has provided city
-		city = sys.argv[1]			
-		if get_aqi_by_city(city) == False:
-			print("Use command python aqi.py <City Name> or python aqi.py for location detection via IP address")
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-c", "--city", help="enter a city name for which you wold like to see AQI", type=str)
+	args = parser.parse_args()
+
+	if args.city: 		#if user has provided city
+		get_aqi_by_city(args.city)
 	else:					# if user has not provided
 		get_aqi()
 
