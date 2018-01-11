@@ -1,5 +1,7 @@
+#!bin/python
 import requests
 import sys
+import argparse
 import urllib.parse
 
 #get user location
