@@ -6,8 +6,21 @@ import sys
 import argparse
 import urllib.parse
 
-#get user location
+#class with color codes for output
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    MAGNETA = '\033[35m'
 
+
+
+#get user location
 def get_location():
 	status_code = None
 	try:
@@ -40,13 +53,57 @@ def get_aqi_by_city(city):
 				print('For location {}  no data available'.format(city))
 				return False
 
-			for station in station_list:
-				print("{0}-[{1}] ({2})".format(station['station']['name'], station.get('aqi'), station['time']['stime']))
-			return True
+			# for station in station_list:
+			# 	print("{0}-[{1}] ({2})".format(station['station']['name'], station.get('aqi'), station['time']['stime']))
+			return station_list
 		else:
 			print('Error {0} Network error'.format(aqi_req.status_code))
 	except Exception:
 		print('Network failed which fetching AQI city data')
+
+def process_time_string(time_str):
+	#process time string from 2018-01-16 03:00:00 to 16/1/18,3:00AM
+	try:
+		d,t = time_str.split(' ')
+		rev_d= d.split('-')[::-1]
+		date = '/'.join([rev_d[0] , rev_d[1] , rev_d[2][2:] ])
+		h,m, s= t.split(':')
+		suffix = None
+		if 24 > int(h) > 12: 
+			suffix = 'PM'
+		else: 
+			suffix = 'AM'
+
+		time = h +':'+ m + suffix
+		return time + ','+date
+	except ValueError:
+		return time_str
+
+def process_aqi(aqi_str):
+	try:
+		aqi = int(aqi_str)
+		if 0 <= aqi < 100:
+			return bcolors.OKGREEN + bcolors.BOLD  + aqi_str + bcolors.ENDC
+		if 100 <= aqi <= 200:
+			return bcolors.WARNING + bcolors.BOLD  + aqi_str + bcolors.ENDC
+		if aqi > 200:
+			return bcolors.FAIL + bcolors.BOLD  + aqi_str + bcolors.ENDC
+
+	except ValueError:
+		return aqi_str
+
+
+
+def print_aqi_data(stations): #gets aqi data (stations list) and prints them
+	for st in stations:
+		name = bcolors.BOLD + st['station']['name'] + bcolors.ENDC
+		aqi_str = st.get('aqi')
+		time_str = st['time']['stime']
+
+		aqi = process_aqi(aqi_str)
+		time = process_time_string(time_str)
+
+		print('{0} [{1}]({2})'.format(name,aqi,time))
 
 
 def get_aqi():
@@ -60,7 +117,9 @@ def main():
 	args = parser.parse_args()
 
 	if args.city: 		#if user has provided city
-		get_aqi_by_city(args.city)
+		aqi_data = get_aqi_by_city(args.city)
+		if aqi_data:
+			print_aqi_data(aqi_data)
 	else:					# if user has not provided
 		get_aqi()
 
