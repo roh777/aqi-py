@@ -1,4 +1,5 @@
-#!bin/python
+#!/usr/bin/env python
+
 import requests
 import sys
 #for command line arguments
@@ -29,7 +30,7 @@ def get_location():
 def get_aqi_by_city(city):
 	params = {'keyword' : city, 'token' : 'aa2aa1c21d4286431713a940b5e18aeb5f6fb3c0'}
 	req_url = 'https://api.waqi.info/search/?'+urllib.parse.urlencode(params)
-	#print (req_url)
+	
 	try:
 		aqi_req = requests.get(req_url)
 		if aqi_req.status_code == 200:
@@ -40,7 +41,7 @@ def get_aqi_by_city(city):
 				return False
 
 			for station in station_list:
-				print(station['station']['name'], station.get('aqi'))
+				print("{0}-[{1}] ({2})".format(station['station']['name'], station.get('aqi'), station['time']['stime']))
 			return True
 		else:
 			print('Error {0} Network error'.format(aqi_req.status_code))
