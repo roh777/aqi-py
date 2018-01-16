@@ -14,7 +14,7 @@ or
 ```
 $ python aqi.py --city Seoul
 ```
-#####Output
+##### Output
 ```
 Seoul [187](16:00PM,16/01/18)
 Jongro, Seoul, South Korea [157](16:00PM,16/01/18)
