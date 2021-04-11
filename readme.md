@@ -4,15 +4,30 @@ Get AQI Index by city, in you terminal using https://aqicn.org API.
 
 Note: Requires python 3
 
+Install requests module in python
+
+### To install requests
+
+```
+ python3 -m pip install requests
+```
+
+If you have pip installed then, use the following
+
+```
+sudo pip install requests
+
+```
+
 #### Usage
 
 ```
-$ python aqi.py -c Seoul
+$ python3 aqi.py -c Seoul
 ```
 or 
 
 ```
-$ python aqi.py --city Seoul
+$ python3 aqi.py --city Seoul
 ```
 ##### Output
 ```
